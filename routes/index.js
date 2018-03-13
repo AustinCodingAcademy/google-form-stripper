@@ -35,6 +35,7 @@ router.post('/', function(req, res, next) {
       $(inputs[i]).removeAttr('id');
       $('form').append(inputs[i]);
     }
+    $('form').append('<input type="submit" />');
     res.json({ html: html.prettyPrint($.html('form'), {indent_size: 2}) });
   });
 });
