@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
     $ = cheerio.load(body);
     console.log($.html());
     var inputs = [];
-    $('form input,select,textarea,label').each(function() {
+    $('input,select,textarea,label').each(function() {
       inputs.push(this);
     });
     $('form').html('');
