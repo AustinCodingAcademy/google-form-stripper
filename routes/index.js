@@ -17,22 +17,20 @@ router.post('/', function(req, res, next) {
     $ = cheerio.load(body);
     console.log($.html());
     var inputs = [];
-    $('input,select,textarea,label').each(function() {
+    $('input').each(function() {
       inputs.push(this);
     });
     $('form').html('');
     $('form').removeAttr('id');
     for (var i = 0; i < inputs.length; i++) {
-      if ($(inputs[i]).find('div,span').length > 0) {
-        var texts = [];
-        $(inputs[i]).find('div,span').each(function() {
-          texts.push($(this).text())
-        });
-        $(inputs[i]).text(texts.join(' '));
+      if ($(inputs[i].attr('type') !== 'hidden') {
+          const id = inputs[i].attr('aria-label').toLowerCase().split(' ').join('-');
+          $('form').append(`<label for="${id}">${inputs[i].attr('aria-label')}</label>`);
+          $(inputs[i]).attr('id', id);
       }
-
-      $(inputs[i]).removeAttr('class');
-      $(inputs[i]).removeAttr('id');
+      _.keys(_.omit($(inputs[i]).attribs, ['type', 'name', 'value', 'id'])).forEach(key => {
+        $(inputs[i]).removeAttr(key);
+      })
       $('form').append(inputs[i]);
     }
     $('form').append('<input type="submit" />');
