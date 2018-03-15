@@ -15,7 +15,6 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   request.get(req.body.form_url, function(err, response, body) {
     $ = cheerio.load(body);
-    console.log($.html());
     var inputs = [];
     $('input').each(function() {
       inputs.push(this);
@@ -23,12 +22,13 @@ router.post('/', function(req, res, next) {
     $('form').html('');
     $('form').removeAttr('id');
     for (var i = 0; i < inputs.length; i++) {
-      if ($(inputs[i].attr('type') !== 'hidden') {
-          const id = inputs[i].attr('aria-label').toLowerCase().split(' ').join('-');
-          $('form').append(`<label for="${id}">${inputs[i].attr('aria-label')}</label>`);
+      if ($(inputs[i]).attr('type') !== 'hidden') {
+          const id = $(inputs[i]).attr('aria-label').toLowerCase().split(' ').join('-');
+          $('form').append(`<label for="${id}">${$(inputs[i]).attr('aria-label')}</label>`);
           $(inputs[i]).attr('id', id);
       }
-      _.keys(_.omit($(inputs[i]).attribs, ['type', 'name', 'value', 'id'])).forEach(key => {
+      _.keys(_.omit(inputs[i].attribs, ['type', 'name', 'value', 'id'])).forEach(key => {
+        console.log(key)
         $(inputs[i]).removeAttr(key);
       })
       $('form').append(inputs[i]);
